@@ -4,14 +4,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import codingwithmitch.com.tabiandating.models.User;
 import codingwithmitch.com.tabiandating.util.PreferenceKeys;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IMainActivity{
     private static final String TAG = "MainActivity";
 
     @Override
@@ -19,7 +21,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         isFirstLogin();
+        init();
 
+    }
+    private void init(){
+        HomeFragment homeFragment = new HomeFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_content_frame,homeFragment,getString(R.string.tag_fragment_home));
+        transaction.addToBackStack(getString(R.string.tag_fragment_home));
+        transaction.commit();
     }
 
     public void isFirstLogin(){
@@ -49,4 +59,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void inflateViewProfileFragment(User user) {
+        ViewProfileFragment fragment = new ViewProfileFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(getString(R.string.intent_user),user);
+        fragment.setArguments(args);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_content_frame,fragment,getString(R.string.tag_fragment_view_profile));
+        transaction.addToBackStack(getString(R.string.tag_fragment_view_profile));
+        transaction.commit();
+    }
 }
