@@ -4,24 +4,43 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import codingwithmitch.com.tabiandating.models.User;
 import codingwithmitch.com.tabiandating.util.PreferenceKeys;
 
-public class MainActivity extends AppCompatActivity implements IMainActivity{
+public class MainActivity extends AppCompatActivity
+        implements IMainActivity,BottomNavigationViewEx.OnNavigationItemSelectedListener{
     private static final String TAG = "MainActivity";
+
+    //widgets
+    private BottomNavigationViewEx mBottomNavigationViewEx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mBottomNavigationViewEx = findViewById(R.id.bottom_nav_view);
+        mBottomNavigationViewEx.setOnNavigationItemSelectedListener(this);
+        initBottomNavigationView();
         isFirstLogin();
         init();
+
+    }
+
+    private void initBottomNavigationView(){
+        Log.d(TAG, "initBottomNavigationView: initializing bottom navigation view");
+        mBottomNavigationViewEx.enableAnimation(false);
+
 
     }
     private void init(){
@@ -69,5 +88,25 @@ public class MainActivity extends AppCompatActivity implements IMainActivity{
         transaction.replace(R.id.main_content_frame,fragment,getString(R.string.tag_fragment_view_profile));
         transaction.addToBackStack(getString(R.string.tag_fragment_view_profile));
         transaction.commit();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.bottom_nav_home:
+                menuItem.setChecked(true);
+                Log.d(TAG, "onNavigationItemSelected: HomeFragment");
+                break;
+            case R.id.bottom_nav_connections:
+                menuItem.setChecked(true);
+                Log.d(TAG, "onNavigationItemSelected: ConnectionsFragment");
+                break;
+            case R.id.bottom_nav_messages:
+                menuItem.setChecked(true);
+                Log.d(TAG, "onNavigationItemSelected: MessagesFragment");
+                break;
+
+        }
+        return false;
     }
 }

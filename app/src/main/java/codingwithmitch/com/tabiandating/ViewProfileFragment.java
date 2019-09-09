@@ -29,6 +29,7 @@ public class ViewProfileFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if(bundle != null){
             mUser = bundle.getParcelable(getString(R.string.intent_user));
+            assert mUser != null;
             Log.d(TAG, "onCreate: got incoming bundle: " + mUser.getName());
         }
     }
