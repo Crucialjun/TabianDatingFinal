@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TabianDating.iml" filepath="$PROJECT_DIR$/TabianDating.iml" group="TabianDating" />
+      <module fileurl="file://$PROJECT_DIR$/TabianDatingFinal.iml" filepath="$PROJECT_DIR$/TabianDatingFinal.iml" group="TabianDatingFinal" />
+      <module fileurl="file://$PROJECT_DIR$/app/TabianDatingFinal-app.iml" filepath="$PROJECT_DIR$/app/TabianDatingFinal-app.iml" group="TabianDatingFinal/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="TabianDating/app" />
     </modules>
   </component>

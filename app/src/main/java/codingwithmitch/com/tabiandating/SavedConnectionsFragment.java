@@ -54,6 +54,7 @@ public class SavedConnectionsFragment extends Fragment{
 
     private void getConnections(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         Set<String> savedNames = preferences.getStringSet(PreferenceKeys.SAVED_CONNECTIONS, new HashSet<String>());
 
         Users users = new Users();
