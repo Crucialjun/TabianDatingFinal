@@ -5,13 +5,17 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import codingwithmitch.com.tabiandating.models.Message;
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity
 
     //widgets
     private BottomNavigationViewEx mBottomNavigationViewEx;
+    private ImageView mHeaderImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +37,15 @@ public class MainActivity extends AppCompatActivity
 
         mBottomNavigationViewEx = findViewById(R.id.bottom_nav_view);
         mBottomNavigationViewEx.setOnNavigationItemSelectedListener(this);
+
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        View headerView = navigationView.getHeaderView(0);
+        mHeaderImage = headerView.findViewById(R.id.header_image);
+
+
         initBottomNavigationView();
         isFirstLogin();
+        setHeaderImage();
         init();
 
     }
@@ -50,6 +62,11 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.main_content_frame,homeFragment,getString(R.string.tag_fragment_home));
         transaction.addToBackStack(getString(R.string.tag_fragment_home));
         transaction.commit();
+    }
+
+    private void setHeaderImage(){
+        Log.d(TAG, "setHeaderImage: Setting header image for navigation drawer");
+        Glide.with(this).load(R.drawable.couple).into(mHeaderImage);
     }
 
     public void isFirstLogin(){
