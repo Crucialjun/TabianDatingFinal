@@ -75,6 +75,8 @@ public class AgreementFragment extends Fragment implements View.OnClickListener{
 
         if(view.getId() == R.id.back_arrow){
             Log.d(TAG, "onClick: navigating back.");
+            mInterface.onBackPressed();
+
 
         }
     }

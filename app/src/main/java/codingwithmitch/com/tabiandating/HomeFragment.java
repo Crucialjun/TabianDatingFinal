@@ -2,6 +2,7 @@ package codingwithmitch.com.tabiandating;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -18,7 +19,7 @@ import codingwithmitch.com.tabiandating.util.Users;
 
 import static java.util.Collections.*;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "HomeFragment";
 
@@ -27,6 +28,7 @@ public class HomeFragment extends Fragment {
 
     //widgets
     private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     //vars
     private ArrayList<User> mMatches = new ArrayList<>();
@@ -41,6 +43,8 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         Log.d(TAG, "onCreateView: Started");
         mRecyclerView = view.findViewById(R.id.recycler_view);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         findMatches();
         return view;
     }
@@ -65,5 +69,20 @@ public class HomeFragment extends Fragment {
         mMainRecyclerViewAdapter = new MainRecyclerViewAdapter(getActivity(),mMatches);
         mRecyclerView.setAdapter(mMainRecyclerViewAdapter);
 
+    }
+
+    @Override
+    public void onRefresh() {
+        findMatches();
+        onLoadItemsComplete();
+    }
+
+    private void onLoadItemsComplete(){
+        mMainRecyclerViewAdapter.notifyDataSetChanged();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    public void scrollToTop(){
+        mRecyclerView.smoothScrollToPosition(0);
     }
 }

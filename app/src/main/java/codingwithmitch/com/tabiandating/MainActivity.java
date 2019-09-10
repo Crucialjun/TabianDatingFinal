@@ -12,9 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -52,6 +54,11 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<String> mFragmentTags = new ArrayList<>();
     private ArrayList<FragmentTag> mFragments = new ArrayList<>();
     private int mExitCount = 0;
+
+    //constants
+    private static final int HOME_FRAGMENT = 0;
+    private static final int CONNECTIONS_FRAGMENT = 1;
+    private static final int MESSAGES_FRAGMENT = 2;
 
 
     @Override
@@ -100,7 +107,74 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        int backStackCount = mFragmentTags.size();
+
+        if(backStackCount > 1){
+            String topFragmentTag = mFragmentTags.get(backStackCount - 1);
+
+            String newTopFragmentTag = mFragmentTags.get(backStackCount - 2);
+
+            setFragmentVisibilities(newTopFragmentTag);
+            mFragmentTags.remove(topFragmentTag);
+
+            mExitCount = 0;
+
+        }else if (backStackCount == 1) {
+            String topfragment = mFragmentTags.get(backStackCount - 1);
+            if(topfragment.equals(getString(R.string.tag_fragment_home))){
+                mHomeFragment.scrollToTop();
+                mExitCount++;
+                Toast.makeText(this, "1 more click to exit", Toast.LENGTH_SHORT).show();
+            }else{
+                mExitCount++;
+                Toast.makeText(this, "1 more click to exit", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        if(mExitCount >= 2) super.onBackPressed();
+    }
+
+    private void setNavgationIcon(String tagname){
+        Menu menu = mBottomNavigationViewEx.getMenu();
+        MenuItem menuItem = null;
+
+        if(tagname.equals(getString(R.string.tag_fragment_home))){
+            Log.d(TAG, "setNavgationIcon: homefragment is visible");
+            menuItem = menu.getItem(HOME_FRAGMENT);
+            menuItem.setChecked(true);
+        } else if(tagname.equals(getString(R.string.tag_fragment_saved_connections))){
+            Log.d(TAG, "setNavgationIcon: Connections is visible");
+            menuItem = menu.getItem(CONNECTIONS_FRAGMENT);
+            menuItem.setChecked(true);
+        } else if(tagname.equals(getString(R.string.tag_fragment_messages))) {
+            Log.d(TAG, "setNavgationIcon: messagesfragment is visible");
+            menuItem = menu.getItem(MESSAGES_FRAGMENT);
+            menuItem.setChecked(true);
+        }
+    }
+
     private void setFragmentVisibilities(String tagname){
+        if(tagname.equals(getString(R.string.tag_fragment_home))){
+            showBottomNavigation();
+        }
+        else if(tagname.equals(getString(R.string.tag_fragment_saved_connections))){
+            showBottomNavigation();
+        }
+        else if(tagname.equals(getString(R.string.tag_fragment_messages))){
+            showBottomNavigation();
+        }else if(tagname.equals(getString(R.string.tag_fragment_settings))){
+            hideBottomNavigation();
+        }else if(tagname.equals(getString(R.string.tag_fragment_view_profile))){
+            hideBottomNavigation();
+        }else if(tagname.equals(getString(R.string.tag_fragment_chat))){
+            hideBottomNavigation();
+        }else if(tagname.equals(getString(R.string.tag_fragment_agreement))){
+            hideBottomNavigation();
+        }
         for(int i = 0; i < mFragments.size();i++){
             if(tagname.equals(mFragments.get(i).getTag())){
                 //show
@@ -114,6 +188,8 @@ public class MainActivity extends AppCompatActivity
                 transaction.commit();
             }
         }
+
+        setNavgationIcon(tagname);
     }
 
     private void setNavigationViewListener() {
@@ -125,6 +201,17 @@ public class MainActivity extends AppCompatActivity
     private void setHeaderImage() {
         Log.d(TAG, "setHeaderImage: Setting header image for navigation drawer");
         Glide.with(this).load(R.drawable.couple).into(mHeaderImage);
+    }
+    private void hideBottomNavigation() {
+        if (mBottomNavigationViewEx != null) {
+            mBottomNavigationViewEx.setVisibility(View.GONE);
+        }
+    }
+
+    private void showBottomNavigation() {
+        if (mBottomNavigationViewEx != null) {
+            mBottomNavigationViewEx.setVisibility(View.VISIBLE);
+        }
     }
 
     public void isFirstLogin() {

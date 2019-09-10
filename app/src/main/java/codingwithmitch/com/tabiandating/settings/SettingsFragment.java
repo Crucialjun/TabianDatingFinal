@@ -103,10 +103,43 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         setBackgroundImage(view);
         initToolbar();
         getSavedPreferences();
+        checkPermissions();
 
 
         return view;
     }
+    private void checkPermissions() {
+        final boolean cameraGranted =
+                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_GRANTED;
+        final boolean storageGranted =
+                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED;
+
+
+        String[] perms = null;
+        if (cameraGranted) {
+            if (storageGranted) {
+                mPermissionsChecked = true;
+            }
+            else{
+                perms = new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            }
+        } else {
+            if (!storageGranted) {
+                perms = new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            } else {
+                perms = new String[] {Manifest.permission.CAMERA};
+            }
+        }
+
+        if (perms != null) {
+            ActivityCompat.requestPermissions(getActivity(), perms, VERIFY_PERMISSIONS_REQUEST);
+            mPermissionsChecked = false;
+        }
+    }
+
+
 
     private void getSavedPreferences(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -162,6 +195,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
 
         if(view.getId() == R.id.back_arrow){
             Log.d(TAG, "onClick: navigating back.");
+            mInterface.onBackPressed();
 
         }
 
@@ -172,6 +206,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
 
         if(view.getId() == R.id.profile_image){
             Log.d(TAG, "onClick: opening activity to choose a photo.");
+            if(mPermissionsChecked){
+                Intent intent = new Intent(getActivity(),ChoosePhotoActivity.class);
+                startActivityForResult(intent,NEW_PHOTO_REQUEST);
+            }
 
         }
     }

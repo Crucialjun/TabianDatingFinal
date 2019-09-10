@@ -29,7 +29,7 @@ import codingwithmitch.com.tabiandating.util.Resources;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class ViewProfileFragment extends Fragment implements OnLikeListener {
+public class ViewProfileFragment extends Fragment implements OnLikeListener,View.OnClickListener{
 
     private static final String TAG = "ViewProfileFragment";
 
@@ -42,6 +42,7 @@ public class ViewProfileFragment extends Fragment implements OnLikeListener {
 
     //vars
     private User mUser;
+    private IMainActivity mInterface;
 
 
     @Override
@@ -132,6 +133,20 @@ public class ViewProfileFragment extends Fragment implements OnLikeListener {
         editor.apply();
 
     }
+
+    @Override
+    public void onClick(View view) {
+        Log.d(TAG, "onClick: clicked.");
+
+        if(view.getId() == R.id.back_arrow){
+            Log.d(TAG, "onClick: navigating back.");
+            mInterface.onBackPressed();
+
+
+        }
+    }
+
+
 }
 
 
