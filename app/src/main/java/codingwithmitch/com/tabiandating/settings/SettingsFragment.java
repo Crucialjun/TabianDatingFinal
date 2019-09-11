@@ -44,17 +44,17 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         switch (adapterView.getId()){
 
             case R.id.gender_spinner:
-                Log.d(TAG, "onItemSelected: selected a gender: " + (String)adapterView.getItemAtPosition(pos));
+                Log.d(TAG, "onItemSelected: selected a gender: " + adapterView.getItemAtPosition(pos));
                 mSelectedGender = (String)adapterView.getItemAtPosition(pos);
                 break;
 
             case R.id.interested_in_spinner:
-                Log.d(TAG, "onItemSelected: selected an interest: " + (String)adapterView.getItemAtPosition(pos));
+                Log.d(TAG, "onItemSelected: selected an interest: " + adapterView.getItemAtPosition(pos));
                 mSelectedInterest = (String)adapterView.getItemAtPosition(pos);
                 break;
 
             case R.id.relationship_status_spinner:
-                Log.d(TAG, "onItemSelected: selected a status: " + (String)adapterView.getItemAtPosition(pos));
+                Log.d(TAG, "onItemSelected: selected a status: " + adapterView.getItemAtPosition(pos));
                 mSelectedStatus = (String)adapterView.getItemAtPosition(pos);
                 break;
         }
@@ -108,6 +108,31 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
 
         return view;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: called");
+        if(resultCode == NEW_PHOTO_REQUEST){
+            Log.d(TAG, "onActivityResult: received from photo request");
+            if(data != null){
+                if(data.hasExtra(getString(R.string.intent_new_gallery_photo))){
+                    Glide.with(this)
+                            .load(data.getStringExtra(getString(R.string.intent_new_gallery_photo)))
+                            .into(mProfileImage);
+                    mSelectedImageUrl
+                            = data.getStringExtra(getString(R.string.intent_new_gallery_photo));
+                }else if(data.hasExtra(getString(R.string.intent_new_camera_photo))){
+                    Glide.with(this)
+                            .load(data.getStringExtra(getString(R.string.intent_new_camera_photo)))
+                            .into(mProfileImage);
+                    mSelectedImageUrl
+                            = data.getStringExtra(getString(R.string.intent_new_camera_photo));
+                }
+            }
+        }
+    }
+
     private void checkPermissions() {
         final boolean cameraGranted =
                 ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
@@ -172,6 +197,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener, 
         }
 
         mSelectedImageUrl = preferences.getString(PreferenceKeys.PROFILE_IMAGE, "");
+        assert mSelectedImageUrl != null;
         if(!mSelectedImageUrl.equals("")){
             Glide.with(this)
                     .load(mSelectedImageUrl)

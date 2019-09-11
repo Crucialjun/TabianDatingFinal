@@ -3,8 +3,11 @@ package codingwithmitch.com.tabiandating.settings;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import codingwithmitch.com.tabiandating.MyPagerAdapter;
 import codingwithmitch.com.tabiandating.R;
 
 
@@ -19,6 +22,7 @@ public class ChoosePhotoActivity extends AppCompatActivity {
     private PhotoFragment mPhotoFragment;
 
     //widgets
+    private ViewPager mViewPager;
 
 
     @Override
@@ -26,6 +30,25 @@ public class ChoosePhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_photo);
 
+        mViewPager = findViewById(R.id.viewpager_container);
+
+
+
+    }
+
+    private void setupViewPager(){
+        MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
+        mPhotoFragment = new PhotoFragment();
+        adapter.addFragment(mGalleryFragment);
+        adapter.addFragment(mPhotoFragment);
+
+
+        mViewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = findViewById(R.id.tabs_bottom);
+        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.getTabAt(GALLERY_FRAGMENT).setText(getString(R.string.tag_fragment_gallery));
+        tabLayout.getTabAt(PHOTO_FRAGMENT).setText(getString(R.string.tag_fragment_gallery));
 
     }
 
